@@ -9,8 +9,11 @@ import static io.restassured.RestAssured.given;
 public class ApiHelper {
 
     static String URL = "https://restful-booker.herokuapp.com" ;
-    public static Response GetBookings(){
+
+    public static void setUpAPI(){
         RestAssured.baseURI = URL;
+    }
+    public static Response GetBookings(){
         Response response = given()
                 .contentType(ContentType.JSON)
                 .when()
@@ -22,7 +25,6 @@ public class ApiHelper {
     }
 
     public static Response GetBookingWithID(int id){
-        RestAssured.baseURI = URL;
         Response response = given()
                 .contentType(ContentType.JSON)
                 .when()
@@ -33,6 +35,33 @@ public class ApiHelper {
         return response;
     }
 
+    public static Response createBooking(String data){
+        Response response = given()
+                .contentType(ContentType.JSON)
+                .auth()
+                .basic("admin", "password123")
+                .body(data)
+                .post("/booking")
+                .then()
+                .extract()
+                .response();
+        System.out.println(response.getBody().asString());
+        return response;
+    }
+
+    public static Response deleteBooking(int id){
+        Response response = given()
+                .contentType(ContentType.JSON)
+                .auth()
+                .basic("admin", "password123")
+                .when()
+                .delete("/booking/" + id)
+                .then()
+                .extract()
+                .response();
+        System.out.println(response.getBody().asString());
+        return response;
+    }
 }
 
 
