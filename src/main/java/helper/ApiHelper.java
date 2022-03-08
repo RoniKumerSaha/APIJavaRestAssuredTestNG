@@ -1,5 +1,6 @@
 package helper;
 
+import data.Booking;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -52,8 +53,7 @@ public class ApiHelper {
     public static Response deleteBooking(int id){
         Response response = given()
                 .contentType(ContentType.JSON)
-                .auth()
-                .basic("admin", "password123")
+                .header("Cookie", "token="+createToken())
                 .when()
                 .delete("/booking/" + id)
                 .then()
@@ -61,6 +61,18 @@ public class ApiHelper {
                 .response();
         System.out.println(response.getBody().asString());
         return response;
+    }
+
+    public static String createToken(){
+        Response response = given()
+                .contentType(ContentType.JSON)
+                .when()
+                .body(Booking.authData)
+                .post("/auth")
+                .then()
+                .extract()
+                .response();
+        return response.jsonPath().get("token");
     }
 }
 

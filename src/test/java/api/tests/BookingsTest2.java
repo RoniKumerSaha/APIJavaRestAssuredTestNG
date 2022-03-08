@@ -7,22 +7,22 @@ import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
-public class BookingsTest {
+public class BookingsTest2 {
     int bookingID;
 
-    @BeforeMethod
+    @Test
     public void setUP(){
         ApiHelper.setUpAPI();
     }
 
 
-    @Test(priority = 1, description = "Checking all existing bookings", dependsOnMethods = {"verifyCreateBooking"})
+    @Test(groups = "smoke", dependsOnGroups = "ini")
     public void verifyAllBooking(){
         Response res = ApiHelper.GetBookings();
         Assert.assertEquals(200, res.statusCode());
         Assert.assertTrue(res.getBody().asString().contains("\"bookingid\":" + bookingID));
     }
-    @Test(priority = 2, description = "Verify a booking using booking id", dependsOnMethods = {"verifyCreateBooking"})
+    @Test(groups = {"smoke", "wip"}, dependsOnGroups = "ini")
     public void verifyBooking(){
         Response res = ApiHelper.GetBookingWithID(bookingID);
         JsonPath data = res.jsonPath();
@@ -32,7 +32,7 @@ public class BookingsTest {
         Assert.assertEquals((int)data.get("totalprice"), 111);
     }
 
-    @Test(priority = 3, description = "Creating a new booking")
+    @Test(groups = "ini", dependsOnMethods = "setUP")
     public void verifyCreateBooking(){
         Response response = ApiHelper.createBooking(Booking.bookingData);
         JsonPath resData = response.jsonPath();
@@ -41,10 +41,11 @@ public class BookingsTest {
         Assert.assertEquals("Jim", resData.getMap("booking").get("firstname"));
     }
 
-    @Test(priority = 4, description = "Delete a booking", dependsOnMethods = {"verifyCreateBooking"})
+    @Test(groups = "smoke", dependsOnGroups = "ini")
     public void verifyDeleteBooking(){
         Response response = ApiHelper.deleteBooking(bookingID);
         Assert.assertEquals(201, response.statusCode());
     }
 
 }
+

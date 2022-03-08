@@ -13,4 +13,6 @@ public class Booking {
             "    },\n" +
             "    \"additionalneeds\" : \"Breakfast\"\n" +
             "}";
+
+    public static String authData = "{\"username\": \"admin\", \"password\": \"password123\"}";
 }
