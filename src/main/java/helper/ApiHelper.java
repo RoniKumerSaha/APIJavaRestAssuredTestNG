@@ -20,7 +20,7 @@ public class ApiHelper {
                 .get("/booking")
                 .then()
                 .extract().response();
-        System.out.println(response.getBody().asString());
+        //System.out.println(response.getBody().asString());
        return response;
     }
 
